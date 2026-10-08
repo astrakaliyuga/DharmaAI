@@ -1,0 +1,3 @@
+{"id": "5721be1a-7345-4e3e-8f9b-ba8fafcb451c", "timestamp": "2026-10-08T23:45:06.891513+00:00", "category": "architecture", "content": "DharmaAI uses Ollama for local LLM inference.", "metadata": {}}
+{"id": "f9d812fb-c9f3-4b11-b1e3-2da6e8c051c2", "timestamp": "2026-10-08T23:45:06.891577+00:00", "category": "storage", "content": "DharmaAI stores its project data on the external SSD.", "metadata": {}}
+{"id": "c7db52b3-95d5-4b83-883e-26b103b0355f", "timestamp": "2026-10-08T23:45:06.891605+00:00", "category": "brain", "content": "The Brain Router selects models according to task complexity.", "metadata": {}}

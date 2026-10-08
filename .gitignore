@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+venv/
+models/
+workspace/
+logs/
+data/
+memory/chroma_db/
+*.tar.gz
+*.log
