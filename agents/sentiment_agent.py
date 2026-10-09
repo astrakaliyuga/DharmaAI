@@ -16,9 +16,6 @@ class SentimentAgent(BaseAgent):
         text = task[10:].strip()
         if not text:
             return "Usage: sentiment <text>"
-        return self._analyze(text)
-    
-    def _analyze(self, text: str) -> str:
         try:
             import ollama
             response = ollama.chat(

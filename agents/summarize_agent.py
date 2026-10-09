@@ -16,9 +16,6 @@ class SummarizeAgent(BaseAgent):
         text = task[10:].strip()
         if not text:
             return "Usage: summarize <text>"
-        return self._summarize(text)
-    
-    def _summarize(self, text: str) -> str:
         try:
             import ollama
             response = ollama.chat(

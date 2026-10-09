@@ -20,12 +20,8 @@ class TranslateAgent(BaseAgent):
         from_lang = parts[1]
         to_lang = parts[2]
         text = parts[3]
-        return self._translate(from_lang, to_lang, text)
-    
-    def _translate(self, from_lang: str, to_lang: str, text: str) -> str:
         try:
             from deep_translator import GoogleTranslator
-            result = GoogleTranslator(source=from_lang, target=to_lang).translate(text)
-            return result
+            return GoogleTranslator(source=from_lang, target=to_lang).translate(text)
         except Exception as e:
             return f"Translation error: {e}"

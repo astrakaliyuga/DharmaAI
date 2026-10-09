@@ -1,33 +1,27 @@
 # DharmaAI API Documentation
 
-## 17 Agents
+## 20 Agents
 
 ### FileAgent
-- `write <file> <content>` — Write file
-- `read <file>` — Read file
-- `list` — List files
-- `delete <file>` — Delete file
+- `write <file> <content>` | `read <file>` | `list` | `delete <file>`
 
 ### ShellAgent
-- `run <command>` — Safe command
-- Allowed: ls, pwd, echo, cat, date, whoami, df, free, uptime, uname
+- `run <command>` — Allowed: ls, pwd, echo, cat, date, whoami, df, free, uptime, uname
 
 ### CodeAgent
-- `python <code>` — Run Python
+- `python <code>`
 
 ### WebAgent
-- `search <query>` — Web search
-- `fetch <url>` — Fetch URL
+- `search <query>` | `fetch <url>`
 
 ### VoiceAgent
-- `speak <text>` — TTS
-- `transcribe <file>` — STT
+- `speak <text>` | `transcribe <file>`
 
 ### ImageAgent
-- `generate <prompt>` — Image
+- `generate <prompt>`
 
 ### VideoAgent
-- `create <image> <audio>` — Video
+- `create <image> <audio>`
 
 ### SystemAgent
 - `system info` | `cpu` | `ram` | `disk` | `process`
@@ -36,10 +30,10 @@
 - `ping <host>` | `dig <domain>` | `whois <domain>`
 
 ### DatabaseAgent
-- `database <sql>` — SQLite
+- `database <sql>`
 
 ### PDFAgent
-- `pdf read <file>` — PDF
+- `pdf read <file>`
 
 ### BackupAgent
 - `backup list` | `backup run`
@@ -59,3 +53,11 @@
 ### APIAgent
 - `api get <url>` | `api post <url> <data>`
 
+### TranslateAgent
+- `translate <from> <to> <text>`
+
+### SummarizeAgent
+- `summarize <text>`
+
+### SentimentAgent
+- `sentiment <text>`
