@@ -17,10 +17,18 @@ logger = get_logger("agents.manager")
 class AgentManager:
     def __init__(self):
         self.agents = [
-            WebAgent(), VoiceAgent(), ImageAgent(), VideoAgent(),
-            FileAgent(), ShellAgent(), CodeAgent(),
-            SystemAgent(), NetworkAgent(), DatabaseAgent(),
-            PDFAgent(), BackupAgent(),
+            BackupAgent(),      # ← first (specific)
+            PDFAgent(),
+            DatabaseAgent(),
+            NetworkAgent(),
+            SystemAgent(),
+            WebAgent(),
+            VoiceAgent(),
+            ImageAgent(),
+            VideoAgent(),
+            FileAgent(),
+            ShellAgent(),
+            CodeAgent(),
         ]
         logger.info(f"AgentManager initialized with {len(self.agents)} agents")
     

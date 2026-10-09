@@ -5,7 +5,7 @@ from agents.manager import AgentManager
 
 def main():
     print("=" * 60)
-    print("DharmaAI - Full AI Assistant")
+    print("DharmaAI - Full AI Assistant (12 Agents)")
     print("=" * 60)
     print("Commands:")
     print("  --- Chat ---")
@@ -30,19 +30,35 @@ def main():
     print("  /image <prompt>     - generate image")
     print("  --- Video ---")
     print("  /video <img> <aud>  - create video")
+    print("  --- System ---")
+    print("  /system             - system info")
+    print("  /cpu                - CPU info")
+    print("  /ram                - RAM info")
+    print("  /disk               - Disk info")
+    print("  /process            - Process info")
+    print("  --- Network ---")
+    print("  /ping <host>        - ping")
+    print("  /dig <domain>       - dig")
+    print("  /whois <domain>     - whois")
+    print("  --- Database ---")
+    print("  /db <sql>           - SQLite query")
+    print("  --- PDF ---")
+    print("  /pdf <file>         - PDF read")
+    print("  --- Backup ---")
+    print("  /backup list        - list backups")
+    print("  /backup run         - run backup")
     print("  --- Exit ---")
     print("  /quit               - exit")
     print("=" * 60)
     print("Examples:")
     print("  /agent write hello.txt Hello DharmaAI")
-    print("  /agent run whoami")
-    print("  /agent python print('Hello')")
     print("  /web search Python programming")
-    print("  /web fetch example.com")
     print("  /speak Hello from DharmaAI")
-    print("  /transcribe /path/to/audio.wav")
-    print("  /image a beautiful sunset over mountains")
-    print("  /video workspace/images/image_0.png workspace/voice/output.wav")
+    print("  /image a beautiful sunset")
+    print("  /system")
+    print("  /ping google.com")
+    print("  /db CREATE TABLE users (id INTEGER, name TEXT)")
+    print("  /backup list")
     print("=" * 60)
     
     brain = LLMBrain()
@@ -66,7 +82,7 @@ def main():
                 print("Memory saved. Goodbye!")
                 break
             
-            # ==================== CHAT COMMANDS ====================
+            # ==================== CHAT ====================
             elif cmd == "/reset":
                 brain.reset()
                 print("Conversation reset.")
@@ -100,7 +116,7 @@ def main():
                     print("  No results found.")
                 continue
             
-            # ==================== RAG COMMANDS ====================
+            # ==================== RAG ====================
             elif cmd.startswith("/rag "):
                 question = user_input[5:].strip()
                 answer = rag.query(question)
@@ -113,7 +129,7 @@ def main():
                 print(f"\nRAG: {result}")
                 continue
             
-            # ==================== AGENT COMMANDS ====================
+            # ==================== AGENTS ====================
             elif cmd == "/agents":
                 print("\n--- Available Agents ---")
                 for name, desc in manager.list_agents():
@@ -127,7 +143,7 @@ def main():
                 print(f"\nAgent: {result}")
                 continue
             
-            # ==================== WEB COMMANDS ====================
+            # ==================== WEB ====================
             elif cmd.startswith("/web "):
                 task = user_input[5:].strip()
                 print(f"\n[Web: {task}]")
@@ -135,7 +151,7 @@ def main():
                 print(f"\nWeb: {result}")
                 continue
             
-            # ==================== VOICE COMMANDS ====================
+            # ==================== VOICE ====================
             elif cmd.startswith("/speak "):
                 text = user_input[7:].strip()
                 print(f"\n[Speaking: {text}]")
@@ -150,7 +166,7 @@ def main():
                 print(f"\nTranscription: {result}")
                 continue
             
-            # ==================== IMAGE COMMANDS ====================
+            # ==================== IMAGE ====================
             elif cmd.startswith("/image "):
                 prompt = user_input[7:].strip()
                 print(f"\n[Generating image: {prompt}]")
@@ -159,15 +175,82 @@ def main():
                 print(f"\nImage: {result}")
                 continue
             
-            # ==================== VIDEO COMMANDS ====================
+            # ==================== VIDEO ====================
             elif cmd.startswith("/video "):
                 args = user_input[7:].strip()
                 print(f"\n[Creating video: {args}]")
-                # Direct ga VideoAgent ki pampu
-                from agents.video_agent import VideoAgent
-                video_agent = VideoAgent()
-                result = video_agent.run(f"create {args}")
+                result = manager.run(f"create {args}")
                 print(f"\nVideo: {result}")
+                continue
+            
+            # ==================== SYSTEM ====================
+            elif cmd == "/system":
+                result = manager.run("system info")
+                print(f"\nSystem: {result}")
+                continue
+            
+            elif cmd == "/cpu":
+                result = manager.run("cpu")
+                print(f"\nCPU: {result}")
+                continue
+            
+            elif cmd == "/ram":
+                result = manager.run("ram")
+                print(f"\nRAM: {result}")
+                continue
+            
+            elif cmd == "/disk":
+                result = manager.run("disk")
+                print(f"\nDisk: {result}")
+                continue
+            
+            elif cmd == "/process":
+                result = manager.run("process")
+                print(f"\nProcess: {result}")
+                continue
+            
+            # ==================== NETWORK ====================
+            elif cmd.startswith("/ping "):
+                host = user_input[6:].strip()
+                result = manager.run(f"ping -c 3 {host}")
+                print(f"\nPing: {result}")
+                continue
+            
+            elif cmd.startswith("/dig "):
+                domain = user_input[5:].strip()
+                result = manager.run(f"dig {domain}")
+                print(f"\nDig: {result}")
+                continue
+            
+            elif cmd.startswith("/whois "):
+                domain = user_input[7:].strip()
+                result = manager.run(f"whois {domain}")
+                print(f"\nWhois: {result}")
+                continue
+            
+            # ==================== DATABASE ====================
+            elif cmd.startswith("/db "):
+                query = user_input[4:].strip()
+                result = manager.run(f"database {query}")
+                print(f"\nDB: {result}")
+                continue
+            
+            # ==================== PDF ====================
+            elif cmd.startswith("/pdf "):
+                filepath = user_input[5:].strip()
+                result = manager.run(f"pdf read {filepath}")
+                print(f"\nPDF: {result}")
+                continue
+            
+            # ==================== BACKUP ====================
+            elif cmd == "/backup list":
+                result = manager.run("backup list")
+                print(f"\nBackup: {result}")
+                continue
+            
+            elif cmd == "/backup run":
+                result = manager.run("backup run")
+                print(f"\nBackup: {result}")
                 continue
             
             # ==================== NORMAL CHAT ====================

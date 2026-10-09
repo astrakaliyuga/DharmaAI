@@ -14,22 +14,21 @@ class BackupAgent(BaseAgent):
         self.backup_dir.mkdir(parents=True, exist_ok=True)
     
     def can_handle(self, task: str) -> bool:
-        return "backup" in task.lower()
+        return task.lower().startswith("backup")
     
     def run(self, task: str, **kwargs) -> str:
-        # Task: "backup list" → action = "list"
         parts = task.split()
-        if len(parts) < 2:
-            return self._list_backups()
-        
-        action = parts[1].lower()
+        # "backup list" → action = "list"
+        # "backup run"  → action = "run"
+        if len(parts) >= 2:
+            action = parts[1].lower()
+        else:
+            action = "list"
         
         if action == "run":
             return self._run_backup()
-        elif action == "list":
-            return self._list_backups()
         else:
-            return f"Unknown action: {action}\nUsage: backup list | backup run"
+            return self._list_backups()
     
     def _run_backup(self) -> str:
         try:

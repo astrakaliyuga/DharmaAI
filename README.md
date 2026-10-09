@@ -1,12 +1,12 @@
 # 🧠 DharmaAI
 
-**Personal AI Assistant with 7 Agents**
+**Personal AI Assistant with 12 Agents**
 
 Built from scratch on Kali Linux using local models.
 
 ## 🚀 Features
 
-- **7 Agents**: File, Shell, Code, Web, Voice, Image, Video
+- **12 Agents**: File, Shell, Code, Web, Voice, Image, Video, System, Network, Database, PDF, Backup
 - **Memory**: Short-term + Long-term (ChromaDB)
 - **RAG**: Retrieval Augmented Generation
 - **Security Registry**: 7 security tools (recommendations only)
@@ -38,3 +38,7 @@ source ~/ai-lab/venv/bin/activate
 
 # Run chat
 python3 chat.py
+
+# Run web UI
+python3 web_ui.py
+# Browser: http://localhost:5000

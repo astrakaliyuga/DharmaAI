@@ -29,8 +29,13 @@ class ShellAgent(BaseAgent):
         self.workspace.mkdir(parents=True, exist_ok=True)
 
     def can_handle(self, task: str) -> bool:
-        keywords = ["run", "execute", "shell", "command"]
-        return any(word in task.lower() for word in keywords)
+        task_lower = task.lower()
+        # Only match if starts with "run " or "execute " or "shell "
+        return (
+            task_lower.startswith("run ") or
+            task_lower.startswith("execute ") or
+            task_lower.startswith("shell ")
+        )
 
     def _safe_workspace_path(self, value):
         candidate = Path(value)
