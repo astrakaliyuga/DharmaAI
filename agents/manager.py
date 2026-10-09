@@ -10,6 +10,14 @@ from agents.network_agent import NetworkAgent
 from agents.database_agent import DatabaseAgent
 from agents.pdf_agent import PDFAgent
 from agents.backup_agent import BackupAgent
+from agents.email_agent import EmailAgent
+from agents.scheduler_agent import SchedulerAgent
+from agents.encryption_agent import EncryptionAgent
+from agents.file_watcher_agent import FileWatcherAgent
+from agents.api_agent import APIAgent
+from agents.translate_agent import TranslateAgent
+from agents.summarize_agent import SummarizeAgent
+from agents.sentiment_agent import SentimentAgent
 from core.logger import get_logger
 
 logger = get_logger("agents.manager")
@@ -17,18 +25,11 @@ logger = get_logger("agents.manager")
 class AgentManager:
     def __init__(self):
         self.agents = [
-            BackupAgent(),      # ← first (specific)
-            PDFAgent(),
-            DatabaseAgent(),
-            NetworkAgent(),
-            SystemAgent(),
-            WebAgent(),
-            VoiceAgent(),
-            ImageAgent(),
-            VideoAgent(),
-            FileAgent(),
-            ShellAgent(),
-            CodeAgent(),
+            BackupAgent(), PDFAgent(), DatabaseAgent(), NetworkAgent(),
+            SystemAgent(), EmailAgent(), SchedulerAgent(), EncryptionAgent(),
+            FileWatcherAgent(), APIAgent(), TranslateAgent(), SummarizeAgent(),
+            SentimentAgent(), WebAgent(), VoiceAgent(), ImageAgent(),
+            VideoAgent(), FileAgent(), ShellAgent(), CodeAgent(),
         ]
         logger.info(f"AgentManager initialized with {len(self.agents)} agents")
     

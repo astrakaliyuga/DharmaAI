@@ -6,7 +6,7 @@ from agents.manager import AgentManager
 def test_agents():
     manager = AgentManager()
     agents = manager.list_agents()
-    assert len(agents) == 12, f"Expected 12 agents, got {len(agents)}"
+    assert len(agents) == 20, f"Expected 20 agents, got {len(agents)}"
     print(f"✅ {len(agents)} agents loaded")
     for name, desc in agents:
         print(f"   - {name}: {desc}")
