@@ -132,6 +132,23 @@ def process_single_command(user_input, brain, rag, rag_int, manager):
         text = user_input[11:].strip()
         return f"Sentiment: {manager.run(f'sentiment {text}')}"
     
+    # ==================== PERSONAL COMMANDS ====================
+    elif cmd == "/morning":
+        result = "\n--- Morning Briefing ---\n"
+        result += f"System: {manager.run('system info')}\n"
+        result += f"CPU: {manager.run('cpu')}\n"
+        result += f"RAM: {manager.run('ram')}\n"
+        result += f"Disk: {manager.run('disk')}\n"
+        result += f"Backup: {manager.run('backup list')}\n"
+        return result
+    
+    elif cmd == "/me":
+        result = rag.query("Who is Kaliyuga? What are his goals and skills?")
+        return f"About You: {result}"
+    
+    elif cmd == "/work":
+        return "Work Mode: Ready! What do you need?"
+    
     else:
         return f"DharmaAI: {brain.think(user_input)}"
 
@@ -147,6 +164,10 @@ def main():
     print("  /save               - memory save chey")
     print("  /remember <text>    - long-term memory lo save chey")
     print("  /search <query>     - long-term memory lo search chey")
+    print("  --- Personal ---")
+    print("  /morning            - morning briefing")
+    print("  /me                 - about you")
+    print("  /work               - work mode")
     print("  --- RAG ---")
     print("  /rag <question>     - RAG query chey")
     print("  /load <file>        - load document to RAG")
