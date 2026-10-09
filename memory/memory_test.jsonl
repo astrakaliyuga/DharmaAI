@@ -1,3 +1,3 @@
-{"id": "efbc4778-3be6-46ad-8f43-a4e39d3083ec", "timestamp": "2026-10-09T00:18:04.328843+00:00", "category": "architecture", "content": "DharmaAI uses Ollama for local model inference.", "metadata": {}}
-{"id": "757ecb63-2367-4b77-b57b-d2de733e9a8b", "timestamp": "2026-10-09T00:18:04.328979+00:00", "category": "storage", "content": "DharmaAI project data is stored on the external SSD.", "metadata": {}}
-{"id": "323c20a9-4f85-44ff-b0cb-1ffc1d1b6daa", "timestamp": "2026-10-09T00:18:04.329023+00:00", "category": "brain", "content": "Brain Router selects models based on task complexity.", "metadata": {}}
+{"id": "4830eb5b-54ec-4d0d-a811-13ec942082b3", "timestamp": "2026-10-09T00:43:42.629757+00:00", "category": "architecture", "content": "DharmaAI uses Ollama for local model inference.", "metadata": {}}
+{"id": "54b3a378-7aed-4455-b9de-897977b96135", "timestamp": "2026-10-09T00:43:42.629829+00:00", "category": "storage", "content": "DharmaAI project data is stored on the external SSD.", "metadata": {}}
+{"id": "e84a8138-8cbf-4f12-9cb9-1b980f95fab7", "timestamp": "2026-10-09T00:43:42.629857+00:00", "category": "brain", "content": "Brain Router selects models based on task complexity.", "metadata": {}}
