@@ -1,17 +1,1 @@
-[
-  {
-    "timestamp": "2026-10-09T06:23:55.401782",
-    "content": "Hello",
-    "metadata": {
-      "type": "user_input",
-      "language": "en"
-    }
-  },
-  {
-    "timestamp": "2026-10-09T06:23:56.555269",
-    "content": "Hello! How can I assist you today?",
-    "metadata": {
-      "type": "assistant_response"
-    }
-  }
-]
+[]

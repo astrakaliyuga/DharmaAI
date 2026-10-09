@@ -3,9 +3,142 @@ from brain.rag import RAGBrain
 from brain.rag_integration import RAGIntegration
 from agents.manager import AgentManager
 
+def process_single_command(user_input, brain, rag, rag_int, manager):
+    """Single command process chey"""
+    cmd = user_input.lower().strip()
+    
+    if cmd in ["/quit", "/exit", "/bye", "quit", "exit", "bye", "q"]:
+        brain.save_memory()
+        return "EXIT"
+    
+    elif cmd == "/reset":
+        brain.reset()
+        return "Conversation reset."
+    
+    elif cmd == "/memory":
+        result = "\n--- Recent Memory ---\n"
+        for m in brain.recall(10):
+            result += f"  [{m['metadata']['type']}] {m['content'][:80]}\n"
+        return result
+    
+    elif cmd == "/save":
+        path = brain.save_memory()
+        return f"Saved to {path}"
+    
+    elif cmd.startswith("/remember "):
+        content = user_input[10:].strip()
+        brain.remember(content)
+        return f"Remembered: {content}"
+    
+    elif cmd.startswith("/search "):
+        query = user_input[8:].strip()
+        results = brain.search_memory(query)
+        result = f"\n--- Search Results for: {query} ---\n"
+        if results['documents'] and results['documents'][0]:
+            for doc in results['documents'][0]:
+                result += f"  - {doc}\n"
+        else:
+            result += "  No results found.\n"
+        return result
+    
+    elif cmd.startswith("/rag "):
+        question = user_input[5:].strip()
+        return f"RAG: {rag.query(question)}"
+    
+    elif cmd.startswith("/load "):
+        filepath = user_input[6:].strip()
+        return f"RAG: {rag_int.load_text_file(filepath)}"
+    
+    elif cmd == "/agents":
+        result = "\n--- Available Agents ---\n"
+        for name, desc in manager.list_agents():
+            result += f"  {name}: {desc}\n"
+        return result
+    
+    elif cmd.startswith("/agent "):
+        task = user_input[7:].strip()
+        return f"Agent: {manager.run(task)}"
+    
+    elif cmd.startswith("/web "):
+        task = user_input[5:].strip()
+        return f"Web: {manager.run(task)}"
+    
+    elif cmd.startswith("/speak "):
+        text = user_input[7:].strip()
+        return f"Voice: {manager.run(f'speak {text}')}"
+    
+    elif cmd.startswith("/transcribe "):
+        audio = user_input[12:].strip()
+        return f"Transcription: {manager.run(f'transcribe {audio}')}"
+    
+    elif cmd.startswith("/image "):
+        prompt = user_input[7:].strip()
+        return f"Image: {manager.run(f'generate {prompt}')}"
+    
+    elif cmd.startswith("/video "):
+        args = user_input[7:].strip()
+        return f"Video: {manager.run(f'create {args}')}"
+    
+    elif cmd == "/system":
+        return f"System: {manager.run('system info')}"
+    
+    elif cmd == "/cpu":
+        return f"CPU: {manager.run('cpu')}"
+    
+    elif cmd == "/ram":
+        return f"RAM: {manager.run('ram')}"
+    
+    elif cmd == "/disk":
+        return f"Disk: {manager.run('disk')}"
+    
+    elif cmd == "/process":
+        return f"Process: {manager.run('process')}"
+    
+    elif cmd.startswith("/ping "):
+        host = user_input[6:].strip()
+        return f"Ping: {manager.run(f'ping -c 3 {host}')}"
+    
+    elif cmd.startswith("/dig "):
+        domain = user_input[5:].strip()
+        return f"Dig: {manager.run(f'dig {domain}')}"
+    
+    elif cmd.startswith("/whois "):
+        domain = user_input[7:].strip()
+        return f"Whois: {manager.run(f'whois {domain}')}"
+    
+    elif cmd.startswith("/db "):
+        query = user_input[4:].strip()
+        return f"DB: {manager.run(f'database {query}')}"
+    
+    elif cmd.startswith("/pdf "):
+        filepath = user_input[5:].strip()
+        return f"PDF: {manager.run(f'pdf read {filepath}')}"
+    
+    elif cmd == "/backup list":
+        return f"Backup: {manager.run('backup list')}"
+    
+    elif cmd == "/backup run":
+        return f"Backup: {manager.run('backup run')}"
+    
+    elif cmd.startswith("/translate "):
+        args = user_input[11:].strip()
+        return f"Translate: {manager.run(f'translate {args}')}"
+    
+    elif cmd.startswith("/summarize "):
+        text = user_input[11:].strip()
+        return f"Summarize: {manager.run(f'summarize {text}')}"
+    
+    elif cmd.startswith("/sentiment "):
+        text = user_input[11:].strip()
+        return f"Sentiment: {manager.run(f'sentiment {text}')}"
+    
+    else:
+        return f"DharmaAI: {brain.think(user_input)}"
+
+
 def main():
     print("=" * 60)
-    print("DharmaAI - Full AI Assistant (12 Agents)")
+    print("DharmaAI - Full AI Assistant (20 Agents)")
     print("=" * 60)
     print("Commands:")
     print("  --- Chat ---")
@@ -47,25 +180,23 @@ def main():
     print("  --- Backup ---")
     print("  /backup list        - list backups")
     print("  /backup run         - run backup")
+    print("  --- Translate ---")
+    print("  /translate <from> <to> <text> - translate")
+    print("  --- Summarize ---")
+    print("  /summarize <text>   - summarize")
+    print("  --- Sentiment ---")
+    print("  /sentiment <text>   - sentiment")
     print("  --- Exit ---")
     print("  /quit               - exit")
     print("=" * 60)
-    print("Examples:")
-    print("  /agent write hello.txt Hello DharmaAI")
-    print("  /web search Python programming")
-    print("  /speak Hello from DharmaAI")
-    print("  /image a beautiful sunset")
-    print("  /system")
-    print("  /ping google.com")
-    print("  /db CREATE TABLE users (id INTEGER, name TEXT)")
-    print("  /backup list")
+    print("💡 MULTI-COMMAND: Use ',' to separate commands")
+    print("   Example: /system, /cpu, /ram, /agents, /quit")
     print("=" * 60)
     
     brain = LLMBrain()
     rag = RAGBrain()
     rag_int = RAGIntegration()
     manager = AgentManager()
-    telugu_mode = False
     
     while True:
         try:
@@ -74,189 +205,36 @@ def main():
             if not user_input:
                 continue
             
-            cmd = user_input.lower()
+            # Multi-command split — "," tho separate chey
+            if "," in user_input:
+                parts = [p.strip() for p in user_input.split(",") if p.strip()]
+                
+                for i, part in enumerate(parts, 1):
+                    print(f"\n{'='*60}")
+                    print(f">>> [{i}/{len(parts)}] {part}")
+                    print('='*60)
+                    
+                    result = process_single_command(part, brain, rag, rag_int, manager)
+                    
+                    if result == "EXIT":
+                        print("Memory saved. Goodbye!")
+                        return
+                    
+                    print(result)
+                
+                print(f"\n{'='*60}")
+                print(f"✅ All {len(parts)} commands completed!")
+                print('='*60)
+                continue
             
-            # ==================== EXIT ====================
-            if cmd in ["/quit", "/exit", "/bye", "quit", "exit", "bye", "q"]:
-                brain.save_memory()
+            # Single command
+            result = process_single_command(user_input, brain, rag, rag_int, manager)
+            
+            if result == "EXIT":
                 print("Memory saved. Goodbye!")
                 break
             
-            # ==================== CHAT ====================
-            elif cmd == "/reset":
-                brain.reset()
-                print("Conversation reset.")
-                continue
-            
-            elif cmd == "/memory":
-                print("\n--- Recent Memory ---")
-                for m in brain.recall(10):
-                    print(f"  [{m['metadata']['type']}] {m['content'][:80]}")
-                continue
-            
-            elif cmd == "/save":
-                path = brain.save_memory()
-                print(f"Saved to {path}")
-                continue
-            
-            elif cmd.startswith("/remember "):
-                content = user_input[10:].strip()
-                brain.remember(content)
-                print(f"Remembered: {content}")
-                continue
-            
-            elif cmd.startswith("/search "):
-                query = user_input[8:].strip()
-                results = brain.search_memory(query)
-                print(f"\n--- Search Results for: {query} ---")
-                if results['documents'] and results['documents'][0]:
-                    for doc in results['documents'][0]:
-                        print(f"  - {doc}")
-                else:
-                    print("  No results found.")
-                continue
-            
-            # ==================== RAG ====================
-            elif cmd.startswith("/rag "):
-                question = user_input[5:].strip()
-                answer = rag.query(question)
-                print(f"\nRAG: {answer}")
-                continue
-            
-            elif cmd.startswith("/load "):
-                filepath = user_input[6:].strip()
-                result = rag_int.load_text_file(filepath)
-                print(f"\nRAG: {result}")
-                continue
-            
-            # ==================== AGENTS ====================
-            elif cmd == "/agents":
-                print("\n--- Available Agents ---")
-                for name, desc in manager.list_agents():
-                    print(f"  {name}: {desc}")
-                continue
-            
-            elif cmd.startswith("/agent "):
-                task = user_input[7:].strip()
-                print(f"\n[Routing task: {task}]")
-                result = manager.run(task)
-                print(f"\nAgent: {result}")
-                continue
-            
-            # ==================== WEB ====================
-            elif cmd.startswith("/web "):
-                task = user_input[5:].strip()
-                print(f"\n[Web: {task}]")
-                result = manager.run(task)
-                print(f"\nWeb: {result}")
-                continue
-            
-            # ==================== VOICE ====================
-            elif cmd.startswith("/speak "):
-                text = user_input[7:].strip()
-                print(f"\n[Speaking: {text}]")
-                result = manager.run(f"speak {text}")
-                print(f"\nVoice: {result}")
-                continue
-            
-            elif cmd.startswith("/transcribe "):
-                audio = user_input[12:].strip()
-                print(f"\n[Transcribing: {audio}]")
-                result = manager.run(f"transcribe {audio}")
-                print(f"\nTranscription: {result}")
-                continue
-            
-            # ==================== IMAGE ====================
-            elif cmd.startswith("/image "):
-                prompt = user_input[7:].strip()
-                print(f"\n[Generating image: {prompt}]")
-                print("(CPU lo 4-5 min padutundi...)")
-                result = manager.run(f"generate {prompt}")
-                print(f"\nImage: {result}")
-                continue
-            
-            # ==================== VIDEO ====================
-            elif cmd.startswith("/video "):
-                args = user_input[7:].strip()
-                print(f"\n[Creating video: {args}]")
-                result = manager.run(f"create {args}")
-                print(f"\nVideo: {result}")
-                continue
-            
-            # ==================== SYSTEM ====================
-            elif cmd == "/system":
-                result = manager.run("system info")
-                print(f"\nSystem: {result}")
-                continue
-            
-            elif cmd == "/cpu":
-                result = manager.run("cpu")
-                print(f"\nCPU: {result}")
-                continue
-            
-            elif cmd == "/ram":
-                result = manager.run("ram")
-                print(f"\nRAM: {result}")
-                continue
-            
-            elif cmd == "/disk":
-                result = manager.run("disk")
-                print(f"\nDisk: {result}")
-                continue
-            
-            elif cmd == "/process":
-                result = manager.run("process")
-                print(f"\nProcess: {result}")
-                continue
-            
-            # ==================== NETWORK ====================
-            elif cmd.startswith("/ping "):
-                host = user_input[6:].strip()
-                result = manager.run(f"ping -c 3 {host}")
-                print(f"\nPing: {result}")
-                continue
-            
-            elif cmd.startswith("/dig "):
-                domain = user_input[5:].strip()
-                result = manager.run(f"dig {domain}")
-                print(f"\nDig: {result}")
-                continue
-            
-            elif cmd.startswith("/whois "):
-                domain = user_input[7:].strip()
-                result = manager.run(f"whois {domain}")
-                print(f"\nWhois: {result}")
-                continue
-            
-            # ==================== DATABASE ====================
-            elif cmd.startswith("/db "):
-                query = user_input[4:].strip()
-                result = manager.run(f"database {query}")
-                print(f"\nDB: {result}")
-                continue
-            
-            # ==================== PDF ====================
-            elif cmd.startswith("/pdf "):
-                filepath = user_input[5:].strip()
-                result = manager.run(f"pdf read {filepath}")
-                print(f"\nPDF: {result}")
-                continue
-            
-            # ==================== BACKUP ====================
-            elif cmd == "/backup list":
-                result = manager.run("backup list")
-                print(f"\nBackup: {result}")
-                continue
-            
-            elif cmd == "/backup run":
-                result = manager.run("backup run")
-                print(f"\nBackup: {result}")
-                continue
-            
-            # ==================== NORMAL CHAT ====================
-            else:
-                reply = brain.think(user_input, telugu_mode=telugu_mode)
-                print(f"\nDharmaAI: {reply}")
+            print(f"\n{result}")
             
         except KeyboardInterrupt:
             print("\n\nInterrupted. Saving memory...")
