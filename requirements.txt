@@ -8,3 +8,4 @@ langchain-core
 deep-translator
 psutil
 PyPDF2
+requests
