@@ -8,7 +8,7 @@ from datetime import datetime
 logger = get_logger("brain.llm")
 
 class LLMBrain:
-    def __init__(self, model: str = "qwen2.5:0.5b", memory_size: int = 50):
+    def __init__(self, model: str = "qwen2.5:1.5b", memory_size: int = 50):
         self.model = model
         self.conversation = []
         self.memory = ShortTermMemory(max_size=memory_size)
@@ -29,7 +29,22 @@ class LLMBrain:
         else:
             prompt_for_llm = prompt
         
-        # Long-term memory search (optional — fast)
+        # ==================== AUTO WEB SEARCH — DISABLED ====================
+        # Auto web search disabled for speed and to avoid model confusion.
+        # To enable, uncomment the block below.
+        #
+        # if any(word in prompt.lower() for word in ["what is", "who is", "when", "where", "how", "why", "tell me"]):
+        #     try:
+        #         from agents.web_agent import WebAgent
+        #         web = WebAgent()
+        #         search_result = web.run(f"search {prompt}")
+        #         if search_result and "No results" not in search_result and "error" not in search_result.lower():
+        #             prompt_for_llm = f"Context from web:\n{search_result[:1000]}\n\nQuestion: {prompt}\n\nAnswer:"
+        #             logger.info("Auto web search added to prompt")
+        #     except Exception as e:
+        #         logger.warning(f"Auto web search failed: {e}")
+        
+        # ==================== LONG-TERM MEMORY ====================
         relevant = self.long_term.search(prompt_for_llm, n_results=2)
         context = ""
         if relevant['documents'] and relevant['documents'][0]:
@@ -37,7 +52,7 @@ class LLMBrain:
             for doc in relevant['documents'][0]:
                 context += f"- {doc}\n"
         
-        # Short-term memory save
+        # ==================== SHORT-TERM MEMORY SAVE ====================
         self.memory.add(
             content=original_prompt,
             metadata={"type": "user_input", "language": "te" if (is_telugu_unicode or is_romanized) else "en"}
